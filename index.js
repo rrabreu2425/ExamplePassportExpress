@@ -5,11 +5,14 @@ const cookieParser= require('cookie-parser')
 const session= require('express-session')
 const passportLocal= require('passport-local').Strategy
 const initConexion=require('./data/db')
+const userRouter=require('./router/user')
 
 
 const app= express()
 dotenv.config();
 
+
+app.use('/api/login', userRouter)
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(cookieParser('mi secreto'))
@@ -42,7 +45,7 @@ passport.deserializeUser(function(id, done){
 
 app.set('view engine', 'ejs')
 
-app.get('/', (req,res,next)=>{
+app.get('/api', (req,res,next)=>{
     if(req.isAuthenticated()) {
         return next()
     }
@@ -54,14 +57,14 @@ res.render('home')
 
 })
 
-app.get('/login',(req, res)=>{
+app.get('/api/login',(req, res)=>{
    // mostrar formulario de login
     res.render('login')
 })
 
-app.post('/login',passport.authenticate('local',{    
+app.post('/api/login',passport.authenticate('local',{    
     successRedirect:'/',
-    failureRedirect:'/login'
+    failureRedirect:'/api/login'
 }
 ))
 
