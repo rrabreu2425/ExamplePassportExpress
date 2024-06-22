@@ -7,6 +7,8 @@ const passportLocal= require('passport-local').Strategy
 const initConexion=require('./data/db')
 const userRouter=require('./router/user')
 
+const userSchema= require('./model/User')
+
 
 const app= express()
 dotenv.config();
@@ -25,11 +27,18 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 
-passport.use(new passportLocal(function(username, password, done){
- if(username=='rrabreu@gmail.com' && password=='123'){
-    return done(null,{id:1, name: 'Rigo'})
- }
-   return done(null, false)
+passport.use(new passportLocal(async function(username, password, done){
+    const user= await userSchema.findOne({email: username})
+if(!user){
+  return done(null, false, {message: 'User not found'})
+}
+else{
+    if(user.password!=password){
+        return done(null, false, {message: 'Incorrect password'})
+    }else{
+        return done(null, user)
+    }
+}
 }))
 
 passport.serializeUser(function(user, done){
@@ -45,15 +54,17 @@ passport.deserializeUser(function(id, done){
 
 app.set('view engine', 'ejs')
 
-app.get('/api', (req,res,next)=>{
+app.get('/api/home',(req,res,next)=>{
     if(req.isAuthenticated()) {
         return next()
     }
-    res.redirect('/login')
-},(req, res)=>{
-    //si ya iniciamos sesion mostrar vista de vienvenida
-res.render('home')
-    // si no hemos iniciado sesion redireccionar a vista de login
+     // si no hemos iniciado sesion redireccionar a vista de login
+   res.redirect('/api/login')
+},
+ async (req, res)=>{
+    //si ya iniciamos sesion mostrar vista de vienvenida    
+    res.render('home')
+   
 
 })
 
@@ -63,7 +74,7 @@ app.get('/api/login',(req, res)=>{
 })
 
 app.post('/api/login',passport.authenticate('local',{    
-    successRedirect:'/',
+    successRedirect:'/api/home',
     failureRedirect:'/api/login'
 }
 ))

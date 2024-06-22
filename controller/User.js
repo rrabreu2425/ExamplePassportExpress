@@ -3,7 +3,7 @@ const controller= {}
 
 controller.allUser=async(req, res)=>{
     const datos=await userSchema.find()
-    console.log(datos[0])
+    //console.log(datos[0])
 
 }
 
