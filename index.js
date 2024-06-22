@@ -4,6 +4,7 @@ const passport= require('passport')
 const cookieParser= require('cookie-parser')
 const session= require('express-session')
 const passportLocal= require('passport-local').Strategy
+const initConexion=require('./data/db')
 
 
 const app= express()
@@ -67,3 +68,4 @@ app.post('/login',passport.authenticate('local',{
 app.listen(3000, ()=>{
     console.log('Server runing in port 3000')
 })
+initConexion()
