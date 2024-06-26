@@ -7,7 +7,7 @@ const app= express()
 app.use('/home', homeRouter)
 
 homeRouter.get('/',(req, res)=>{
-res.render('home')
+    res.render('home')
 })
 
 module.exports= homeRouter

@@ -7,15 +7,15 @@ app.use('/', loginRouter)
 loginRouter.get('/signin', (req, res)=>{
     res.render('signin')
 })
-loginRouter.get('/signup', (req, res)=>{
-    res.render('signup')
+loginRouter.get('/signup', async(req, res)=>{
+            res.render('signup')
 })
 loginRouter.post('/signin', (req, res)=>{
     return console.log('prueba')
 })
 
 
-loginRouter.post('/signup', passport.authenticate('local-strategy', {
+loginRouter.post('/signup', passport.authenticate('local-signUp', {
     successRedirect:'/home',
     failureRedirect:'/signup',
     passReqToCallback:true
