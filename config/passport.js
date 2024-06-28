@@ -29,4 +29,28 @@ passport.use('local-signUp', new LocalStrategy({
 }))
 
 
+passport.use('local-signIn', new LocalStrategy({
+    usernameField: 'username',
+    passwordField: 'password',
+    passReqToCallback: true
+}, async(req, username, password, done)=>{
+const newUser= new User()
+
+const userOne= await User.findOne({username:username})
+const passwordCompared= await userOne.comparePassword(password, userOne.password)
+return console.log(passwordCompared)
+//if(!userOne){
+    //return done(null, false, req.flash('signInMessage','The user is not found'))
+//}
+//if(!passwordCompared){
+    //return done(null, false, req.flash('signInMessage','The password is incorrect'))
+//}
+   // return done(null, userOne, req.flash('signInMessage','User loged correctly'))
+
+}
+//}
+)
+)
+
+
 

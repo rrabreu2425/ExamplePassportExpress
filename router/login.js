@@ -10,9 +10,11 @@ loginRouter.get('/signin', (req, res)=>{
 loginRouter.get('/signup', async(req, res)=>{
             res.render('signup')
 })
-loginRouter.post('/signin', (req, res)=>{
-    return console.log('prueba')
-})
+loginRouter.post('/signin', passport.authenticate('local-signIn', {
+    successRedirect:'/home',
+    failureRedirect:'/signip',
+    passReqToCallback:true
+}))
 
 
 loginRouter.post('/signup', passport.authenticate('local-signUp', {
