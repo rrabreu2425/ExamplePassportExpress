@@ -6,8 +6,12 @@ const app= express()
 
 app.use('/home', homeRouter)
 
-homeRouter.get('/',(req, res)=>{
-    res.render('home')
+homeRouter.get('/', (req, res)=>{
+    if(req.isAuthenticated())
+        return res.render('home', {user: req.user})
+        res.render('signin', {user: req.user})
+    
+    
 })
 
 module.exports= homeRouter

@@ -5,14 +5,14 @@ const app= express()
 app.use('/', loginRouter)
 //Routers
 loginRouter.get('/signin', (req, res)=>{
-    res.render('signin')
+    res.render('signin', {user: req.user})
 })
 loginRouter.get('/signup', async(req, res)=>{
-            res.render('signup')
+            res.render('signup', {user: req.user})
 })
 loginRouter.post('/signin', passport.authenticate('local-signIn', {
     successRedirect:'/home',
-    failureRedirect:'/signip',
+    failureRedirect:'/signin',
     passReqToCallback:true
 }))
 
@@ -24,6 +24,15 @@ loginRouter.post('/signup', passport.authenticate('local-signUp', {
     
 
 }))
+loginRouter.get('/logout', function(req, res, next) {
+    req.logout(function(err) {
+      if (err) {
+        return next(err);
+      }
+      res.redirect("/signin");
+    });
+  });
+
 
 
 module.exports= loginRouter

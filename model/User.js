@@ -6,7 +6,7 @@ const UserSchema= new mongoose.Schema({
 })
 
 UserSchema.methods.encryptPassword=async(password)=>{
-  return await bcryptjs.hashSync(password, bcrypt.genSaltSync(10))
+  return await bcryptjs.hashSync(password, bcryptjs.genSaltSync(10))
 }
 
 UserSchema.methods.comparePassword=async(password, passHashed)=>{

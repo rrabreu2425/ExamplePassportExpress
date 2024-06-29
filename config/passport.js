@@ -18,9 +18,9 @@ passport.use('local-signUp', new LocalStrategy({
         if(!userOne){
             const newUser= new User()
             newUser.username=username
-            newUser.password=newUser.encryptPassword(password)
+            newUser.password=await newUser.encryptPassword(password)
             await newUser.save()           
-            return done(null, newUser, req.flash('userCreated','The user is created'))   
+            return done(null, newUser)   
     }
     else{
             return done(null, false, req.flash('signUpMessage','The user is already'))
@@ -37,15 +37,14 @@ passport.use('local-signIn', new LocalStrategy({
 const newUser= new User()
 
 const userOne= await User.findOne({username:username})
+if(!userOne){
+    return done(null, false, req.flash('signInMessage','The user is not found'))
+}
 const passwordCompared= await userOne.comparePassword(password, userOne.password)
-return console.log(passwordCompared)
-//if(!userOne){
-    //return done(null, false, req.flash('signInMessage','The user is not found'))
-//}
-//if(!passwordCompared){
-    //return done(null, false, req.flash('signInMessage','The password is incorrect'))
-//}
-   // return done(null, userOne, req.flash('signInMessage','User loged correctly'))
+if(!passwordCompared){
+    return done(null, false, req.flash('signInMessage','The password is incorrect'))
+}
+    return done(null, userOne)
 
 }
 //}
